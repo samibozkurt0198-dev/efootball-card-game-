@@ -29,7 +29,7 @@
     .empty-slot { width: 65px; height: 85px; border: 2px dashed rgba(255,255,255,0.4); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #aaa; cursor: pointer; background: rgba(0,0,0,0.2); }
 
     /* Futbolcu Kartı */
-    .ef-card { width: 65px; height: 85px; background: linear-gradient(135deg, #1e2436, #0d1019); border-radius: 8px; position: relative; border: 1px solid #ffd700; color: #fff; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer; }
+    .ef-card { width: 65px; height: 85px; background: linear-gradient(135deg, #1e2436, #0d1019); border-radius: 8px; position: relative; border: 1px solid #ffd700; color: #fff; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer; flex-shrink: 0; }
     .ef-card img { width: 100%; height: 68%; object-fit: cover; object-position: top; }
     .ef-card .rating { position: absolute; top: 2px; left: 3px; font-size: 11px; font-weight: 900; color: #ffd700; text-shadow: 1px 1px 2px #000; }
     .ef-card .pos { position: absolute; top: 14px; left: 3px; font-size: 8px; color: #fff; font-weight: bold; }
@@ -37,7 +37,7 @@
 
     /* Oyuncu Envanteri */
     .inventory-title { text-align: left; font-size: 14px; color: #0099ff; margin: 10px 0 5px 0; }
-    .inventory-list { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; width: 100%; }
+    .inventory-list { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; width: 100%; min-height: 105px; }
 
     /* Tablo */
     .league-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; background: #11141d; border-radius: 8px; overflow: hidden; }
@@ -48,8 +48,10 @@
     .nav-item { color: #6c757d; display: flex; flex-direction: column; align-items: center; font-size: 11px; cursor: pointer; gap: 3px; }
     .nav-item.active { color: #0099ff; font-weight: bold; }
 
-    .pack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+    .pack-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
     .pack-card { background: #11141d; border: 1px solid #222838; border-radius: 12px; padding: 15px; text-align: center; }
+    .pack-btns { display: flex; gap: 5px; margin-top: 8px; }
+    .pack-btns button { font-size: 11px; padding: 6px; }
   </style>
 </head>
 <body>
@@ -137,28 +139,64 @@
   <div id="view-shop" class="view-section">
     <h3>Paket Mağazası</h3>
     <div class="pack-grid">
+      
       <div class="pack-card" style="border-color:#cd7f32;">
         <i class="fa-solid fa-box fa-2x" style="color:#cd7f32;"></i>
         <h5 style="margin:5px 0;">Bronz Paket</h5>
-        <p style="font-size:10px; color:#aaa; margin-bottom:8px;">+75 Reyting</p>
-        <button class="btn-main" style="padding:6px; font-size:12px;" onclick="openPack('bronz', 100)">100 Coin</button>
+        <p style="font-size:10px; color:#aaa;">Tekli: 100 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" onclick="openPack('bronz', 100, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 500, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 1000, 10)">10x Aç</button>
+        </div>
       </div>
 
       <div class="pack-card" style="border-color:#c0c0c0;">
         <i class="fa-solid fa-box-open fa-2x" style="color:#c0c0c0;"></i>
         <h5 style="margin:5px 0;">Gümüş Paket</h5>
-        <p style="font-size:10px; color:#aaa; margin-bottom:8px;">+83 Reyting</p>
-        <button class="btn-main" style="padding:6px; font-size:12px;" onclick="openPack('gumus', 250)">250 Coin</button>
+        <p style="font-size:10px; color:#aaa;">Tekli: 250 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" onclick="openPack('gumus', 250, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 1250, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 2500, 10)">10x Aç</button>
+        </div>
       </div>
 
-      <div class="pack-card" style="border-color:#ffd700; grid-column: span 2;">
+      <div class="pack-card" style="border-color:#ffd700;">
         <i class="fa-solid fa-gem fa-2x" style="color:#ffd700;"></i>
-        <h5 style="margin:5px 0;">Efsanevi ICON Paketi</h5>
-        <p style="font-size:10px; color:#aaa; margin-bottom:8px;">+90 Süper Yıldız Garantili!</p>
-        <button class="btn-main" style="background:linear-gradient(45deg, #ffd700, #ffa500); color:#000; padding:8px; font-size:13px;" onclick="openPack('icon', 500)">500 Coin</button>
+        <h5 style="margin:5px 0;">Altın Paket</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 400 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" onclick="openPack('altin', 400, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 2000, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 4000, 10)">10x Aç</button>
+        </div>
       </div>
+
+      <div class="pack-card" style="border-color:#00ffff;">
+        <i class="fa-solid fa-crown fa-2x" style="color:#00ffff;"></i>
+        <h5 style="margin:5px 0;">Elmas Paket</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 750 Coin (+88 Yıldızlar)</p>
+        <div class="pack-btns">
+          <button class="btn-main" onclick="openPack('elmas', 750, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('elmas', 3750, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('elmas', 7500, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#ff007f;">
+        <i class="fa-solid fa-dragon fa-2x" style="color:#ff007f;"></i>
+        <h5 style="margin:5px 0;">Efsanevi ICON Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 1200 Coin (+93 Süper Efsane)</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 1200, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 6000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 12000, 10)">10x Aç</button>
+        </div>
+      </div>
+
     </div>
-    <div id="pack-result" style="margin-top:15px; display:flex; justify-content:center;"></div>
+    <div id="pack-result" style="margin-top:15px; display:flex; gap:10px; overflow-x:auto; padding:10px 0;"></div>
   </div>
 
   <!-- Admin Ekranı -->
@@ -184,7 +222,7 @@
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentUser = null;
-    let selectedPlayerForSlot = null;
+    let selectedPlayerIndex = null;
     let myInventory = [];
     let currentWeek = 1;
 
@@ -203,14 +241,14 @@
     ];
 
     const allPlayersDatabase = [
-      { id:1, name: "L. Messi", rating: 98, pos: "RW", img: "https://images.fineartamerica.com/images/artworkimages/mediumlarge/3/lionel-messi-headshot-dennis-vander-water.jpg" },
-      { id:2, name: "C. Ronaldo", rating: 96, pos: "ST", img: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" },
-      { id:3, name: "K. Mbappe", rating: 95, pos: "ST", img: "https://upload.wikimedia.org/wikipedia/commons/5/57/Kylian_Mbapp%C3%A9_2018.jpg" },
-      { id:4, name: "Vinicius Jr", rating: 93, pos: "LW", img: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Vinicius_Jr_2021.jpg" },
-      { id:5, name: "J. Bellingham", rating: 92, pos: "CAM", img: "https://upload.wikimedia.org/wikipedia/commons/1/10/Jude_Bellingham_2023.jpg" },
-      { id:6, name: "Arda Güler", rating: 88, pos: "CM", img: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Arda_G%C3%Bcler_2023.jpg" },
-      { id:7, name: "V. Van Dijk", rating: 91, pos: "CB", img: "https://upload.wikimedia.org/wikipedia/commons/2/23/Virgil_van_Dijk_2021.jpg" },
-      { id:8, name: "T. Courtois", rating: 90, pos: "GK", img: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Thibaut_Courtois_2018.jpg" }
+      { id:1, name: "L. Messi", rating: 98, pos: "RW", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3s1X5B8x9uX5A1d2K" },
+      { id:2, name: "C. Ronaldo", rating: 96, pos: "ST", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6-m7y9" },
+      { id:3, name: "K. Mbappe", rating: 95, pos: "ST", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6s8" },
+      { id:4, name: "Vinicius Jr", rating: 93, pos: "LW", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy23" },
+      { id:5, name: "J. Bellingham", rating: 92, pos: "CAM", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS23" },
+      { id:6, name: "Arda Güler", rating: 88, pos: "CM", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcA90" },
+      { id:7, name: "V. Van Dijk", rating: 91, pos: "CB", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcD89" },
+      { id:8, name: "T. Courtois", rating: 90, pos: "GK", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcC77" }
     ];
 
     async function login() {
@@ -244,23 +282,28 @@
       if (el) el.classList.add('active');
     }
 
-    async function openPack(type, cost) {
-      if (currentUser.coins < cost) return alert('Yeterli coin yok!');
-      currentUser.coins -= cost;
+    async function openPack(type, totalCost, count) {
+      if (currentUser.coins < totalCost) return alert('Yeterli coin yok!');
+      currentUser.coins -= totalCost;
       await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
       document.getElementById('coin-count').innerText = currentUser.coins;
 
-      const p = allPlayersDatabase[Math.floor(Math.random() * allPlayersDatabase.length)];
-      myInventory.push(p);
+      const packResultDiv = document.getElementById('pack-result');
+      packResultDiv.innerHTML = '';
 
-      document.getElementById('pack-result').innerHTML = `
-        <div class="ef-card">
-          <span class="rating">${p.rating}</span>
-          <span class="pos">${p.pos}</span>
-          <img src="${p.img}" onerror="this.src='https://via.placeholder.com/100'">
-          <div class="name">${p.name}</div>
-        </div>
-      `;
+      for(let i = 0; i < count; i++) {
+        const p = allPlayersDatabase[Math.floor(Math.random() * allPlayersDatabase.length)];
+        myInventory.push(p);
+
+        packResultDiv.innerHTML += `
+          <div class="ef-card">
+            <span class="rating">${p.rating}</span>
+            <span class="pos">${p.pos}</span>
+            <img src="${p.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=11141d&color=ffd700'">
+            <div class="name">${p.name}</div>
+          </div>
+        `;
+      }
 
       renderInventory();
     }
@@ -268,12 +311,18 @@
     function renderInventory() {
       const list = document.getElementById('my-players-list');
       list.innerHTML = '';
+
+      if (myInventory.length === 0) {
+        list.innerHTML = '<p style="font-size:12px; color:#aaa;">Henüz oyuncun yok. Mağazadan paket aç!</p>';
+        return;
+      }
+
       myInventory.forEach((p, index) => {
         list.innerHTML += `
           <div class="ef-card" onclick="selectPlayerFromInv(${index})">
             <span class="rating">${p.rating}</span>
             <span class="pos">${p.pos}</span>
-            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/100'">
+            <img src="${p.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=11141d&color=ffd700'">
             <div class="name">${p.name}</div>
           </div>
         `;
@@ -281,21 +330,29 @@
     }
 
     function selectPlayerFromInv(index) {
-      selectedPlayerForSlot = myInventory[index];
-      alert(`${selectedPlayerForSlot.name} seçildi. Şimdi sahadaki bir boş yere tıklayarak yerleştir!`);
+      selectedPlayerIndex = index;
+      const player = myInventory[index];
+      alert(`${player.name} seçildi. Şimdi sahadaki bir boş yere tıklayarak yerleştir!`);
     }
 
     function placePlayer(slotElement) {
-      if (!selectedPlayerForSlot) return alert('Önce alttan bir oyuncu seçmelisin!');
+      if (selectedPlayerIndex === null || selectedPlayerIndex === undefined) return alert('Önce alttan bir oyuncu seçmelisin!');
+      
+      const player = myInventory[selectedPlayerIndex];
+
       slotElement.innerHTML = `
         <div class="ef-card" style="width:100%; height:100%;">
-          <span class="rating">${selectedPlayerForSlot.rating}</span>
-          <span class="pos">${selectedPlayerForSlot.pos}</span>
-          <img src="${selectedPlayerForSlot.img}" onerror="this.src='https://via.placeholder.com/100'">
-          <div class="name">${selectedPlayerForSlot.name}</div>
+          <span class="rating">${player.rating}</span>
+          <span class="pos">${player.pos}</span>
+          <img src="${player.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=11141d&color=ffd700'">
+          <div class="name">${player.name}</div>
         </div>
       `;
-      selectedPlayerForSlot = null;
+
+      // Sahaya konan oyuncuyu aday listesinden kaldırır
+      myInventory.splice(selectedPlayerIndex, 1);
+      selectedPlayerIndex = null;
+      renderInventory();
     }
 
     function renderLeague() {

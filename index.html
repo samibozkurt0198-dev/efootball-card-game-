@@ -21,6 +21,10 @@
 
     .btn-main { background: linear-gradient(45deg, #0052cc, #0099ff); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
 
+    .mode-switch { display: flex; gap: 10px; margin-bottom: 15px; }
+    .mode-btn { flex: 1; padding: 8px; background: #1a1e2b; border: 1px solid #222838; border-radius: 8px; color: #aaa; cursor: pointer; font-size: 12px; font-weight: bold; }
+    .mode-btn.active { background: #0099ff; color: #fff; border-color: #0099ff; }
+
     /* Saha ve Kadro Kurma */
     .pitch { background: repeating-linear-gradient(0deg, #154d1a, #154d1a 30px, #1c6122 30px, #1c6122 60px); width: 100%; height: 380px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.4); position: relative; margin-bottom: 15px; }
     .squad-grid { position: absolute; width: 100%; height: 100%; display: grid; grid-template-rows: repeat(4, 1fr); padding: 5px; }
@@ -60,6 +64,7 @@
     <div style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
       <i class="fa-solid fa-shield-halved fa-lg" style="color:#0099ff;"></i>
       <span id="user-display">Samet</span>
+      <span id="team-power-badge" style="font-size: 10px; background: #222838; padding: 2px 6px; border-radius: 10px; color: #0099ff; border: 1px solid #0099ff;">Güç: 0</span>
     </div>
     <div class="coin-badge">
       <i class="fa-solid fa-coins"></i>
@@ -83,22 +88,22 @@
     <div class="pitch">
       <div class="squad-grid">
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this)">LW</div>
-          <div class="empty-slot" onclick="placePlayer(this)">ST</div>
-          <div class="empty-slot" onclick="placePlayer(this)">RW</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'LW')">LW</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'ST')">ST</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'RW')">RW</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this)">CM</div>
-          <div class="empty-slot" onclick="placePlayer(this)">CAM</div>
-          <div class="empty-slot" onclick="placePlayer(this)">CM</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'CM1')">CM</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'CAM')">CAM</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'CM2')">CM</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this)">LB</div>
-          <div class="empty-slot" onclick="placePlayer(this)">CB</div>
-          <div class="empty-slot" onclick="placePlayer(this)">CB</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'LB')">LB</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'CB1')">CB</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'CB2')">CB</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this)">GK</div>
+          <div class="empty-slot" onclick="placePlayer(this, 'GK')">GK</div>
         </div>
       </div>
     </div>
@@ -111,28 +116,54 @@
 
   <!-- Lig Ekranı -->
   <div id="view-league" class="view-section">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <h4>Süper Lig (Hafta <span id="week-num">1</span>/38)</h4>
-      <button id="play-week-btn" class="btn-main" style="width:auto; padding:6px 12px;" onclick="simulateWeek()">Haftayı Oyna</button>
-      <button id="reset-league-btn" class="btn-main" style="width:auto; padding:6px 12px; background: linear-gradient(45deg, #ffd700, #ffa500); color:#000; display:none;" onclick="resetSeason()">Yeni Sezona Başla 🏆</button>
+    <div class="mode-switch">
+      <div id="mode-offline-btn" class="mode-btn active" onclick="switchLeagueMode('offline')"><i class="fa-solid fa-desktop"></i> Offline Lig</div>
+      <div id="mode-online-btn" class="mode-btn" onclick="switchLeagueMode('online')"><i class="fa-solid fa-globe"></i> Online Lig</div>
     </div>
 
-    <div id="last-match-result" style="background:#11141d; padding:8px; border-radius:8px; margin-bottom:10px; font-size:11px; color:#0099ff;">
-      Maç sonucun burada görünecek.
+    <!-- Offline İçerik -->
+    <div id="league-offline-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h4>Offline Lig (Hafta <span id="week-num">1</span>/38)</h4>
+        <button id="play-week-btn" class="btn-main" style="width:auto; padding:6px 12px;" onclick="simulateWeek()">Haftayı Oyna</button>
+        <button id="reset-league-btn" class="btn-main" style="width:auto; padding:6px 12px; background: linear-gradient(45deg, #ffd700, #ffa500); color:#000; display:none;" onclick="resetSeason()">Yeni Sezona Başla 🏆</button>
+      </div>
+
+      <div id="last-match-result" style="background:#11141d; padding:8px; border-radius:8px; margin-bottom:10px; font-size:11px; color:#0099ff;">
+        Maç sonucun burada görünecek.
+      </div>
+
+      <table class="league-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="text-align:left;">Takım</th>
+            <th>O</th>
+            <th>G</th>
+            <th>P</th>
+          </tr>
+        </thead>
+        <tbody id="league-body"></tbody>
+      </table>
     </div>
 
-    <table class="league-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th style="text-align:left;">Takım</th>
-          <th>O</th>
-          <th>G</th>
-          <th>P</th>
-        </tr>
-      </thead>
-      <tbody id="league-body"></tbody>
-    </table>
+    <!-- Online İçerik -->
+    <div id="league-online-content" style="display:none;">
+      <div style="background:#11141d; padding:10px; border-radius:8px; margin-bottom:10px; font-size:12px; color:#ffd700;">
+        <i class="fa-solid fa-bullhorn"></i> Online lig maçları Admin tarafından haftalık olarak başlatılır.
+      </div>
+      <table class="league-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="text-align:left;">Kullanıcı</th>
+            <th>Güç</th>
+            <th>Puan</th>
+          </tr>
+        </thead>
+        <tbody id="online-league-body"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- Mağaza Ekranı -->
@@ -143,55 +174,121 @@
       <div class="pack-card" style="border-color:#cd7f32;">
         <i class="fa-solid fa-box fa-2x" style="color:#cd7f32;"></i>
         <h5 style="margin:5px 0;">Bronz Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 100 Coin</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 500 Coin</p>
         <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('bronz', 100, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('bronz', 500, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('bronz', 1000, 10)">10x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 500, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 2500, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 5000, 10)">10x Aç</button>
         </div>
       </div>
 
       <div class="pack-card" style="border-color:#c0c0c0;">
         <i class="fa-solid fa-box-open fa-2x" style="color:#c0c0c0;"></i>
         <h5 style="margin:5px 0;">Gümüş Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 250 Coin</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 1.200 Coin</p>
         <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('gumus', 250, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('gumus', 1250, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('gumus', 2500, 10)">10x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 1200, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 6000, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 12000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#e65c00;">
+        <i class="fa-solid fa-star fa-2x" style="color:#e65c00;"></i>
+        <h5 style="margin:5px 0;">Süper Lig Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 2.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 2000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 10000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 20000, 10)">10x Aç</button>
         </div>
       </div>
 
       <div class="pack-card" style="border-color:#ffd700;">
         <i class="fa-solid fa-gem fa-2x" style="color:#ffd700;"></i>
         <h5 style="margin:5px 0;">Altın Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 400 Coin</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 3.500 Coin</p>
         <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('altin', 400, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('altin', 2000, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('altin', 4000, 10)">10x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 3500, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 17500, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 35000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#9b59b6;">
+        <i class="fa-solid fa-wand-magic-sparkles fa-2x" style="color:#9b59b6;"></i>
+        <h5 style="margin:5px 0;">Yıldızlar Karma Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 4.500 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 4500, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 22500, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 45000, 10)">10x Aç</button>
         </div>
       </div>
 
       <div class="pack-card" style="border-color:#00ffff;">
         <i class="fa-solid fa-crown fa-2x" style="color:#00ffff;"></i>
         <h5 style="margin:5px 0;">Elmas Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 750 Coin (+88 Yıldızlar)</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 6.000 Coin (+88 Yıldızlar)</p>
         <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('elmas', 750, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('elmas', 3750, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('elmas', 7500, 10)">10x Aç</button>
+          <button class="btn-main" onclick="openPack('elmas', 6000, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('elmas', 30000, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('elmas', 60000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#2ecc71;">
+        <i class="fa-solid fa-bolt fa-2x" style="color:#2ecc71;"></i>
+        <h5 style="margin:5px 0;">Geleceğin Yıldızları (Wonderkid)</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 8.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 8000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 40000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 80000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#11998e;">
+        <i class="fa-solid fa-trophy fa-2x" style="color:#11998e;"></i>
+        <h5 style="margin:5px 0;">UEFA Şampiyonlar Ligi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 10.000 Coin (+91 Yıldızlar)</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 10000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 50000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 100000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#e74c3c;">
+        <i class="fa-solid fa-earth-americas fa-2x" style="color:#e74c3c;"></i>
+        <h5 style="margin:5px 0;">Dünya Kupası Özel Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 14.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 14000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 70000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 140000, 10)">10x Aç</button>
         </div>
       </div>
 
       <div class="pack-card" style="border-color:#ff007f;">
         <i class="fa-solid fa-dragon fa-2x" style="color:#ff007f;"></i>
         <h5 style="margin:5px 0;">Efsanevi ICON Paketi</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 1200 Coin (+93 Süper Efsane)</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 18.000 Coin (+93 Süper Efsane)</p>
         <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 1200, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 6000, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 12000, 10)">10x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 18000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 90000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 180000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#f1c40f;">
+        <i class="fa-solid fa-fire-flame-curved fa-2x" style="color:#f1c40f;"></i>
+        <h5 style="margin:5px 0;">Prime All-Stars Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 25.000 Coin (+95 Ultra Süperstar)</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 25000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 125000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 250000, 10)">10x Aç</button>
         </div>
       </div>
 
@@ -201,11 +298,18 @@
 
   <!-- Admin Ekranı -->
   <div id="view-admin" class="view-section">
-    <div style="background:#11141d; border:1px solid #ffd700; border-radius:12px; padding:15px; text-align:left;">
-      <h3 style="color:#ffd700;"><i class="fa-solid fa-crown"></i> Admin Paneli</h3>
+    <div style="background:#11141d; border:1px solid #ffd700; border-radius:12px; padding:15px; text-align:left; margin-bottom: 15px;">
+      <h3 style="color:#ffd700;"><i class="fa-solid fa-crown"></i> Coin Yönetimi</h3>
       <input type="text" id="target-user" placeholder="Kullanıcı Adı" style="width:100%; padding:8px; margin:8px 0; background:#080a0f; border:1px solid #333; color:#fff;">
       <input type="number" id="coin-amount" placeholder="Coin Miktarı" style="width:100%; padding:8px; margin:8px 0; background:#080a0f; border:1px solid #333; color:#fff;">
       <button class="btn-main" onclick="giveCoins()">COIN EKLE</button>
+    </div>
+
+    <div style="background:#11141d; border:1px solid #0099ff; border-radius:12px; padding:15px; text-align:left;">
+      <h3 style="color:#0099ff;"><i class="fa-solid fa-globe"></i> Online Lig Yönetimi</h3>
+      <p style="font-size:11px; color:#aaa; margin:5px 0;">Tüm kullanıcılar arasındaki online maçları simüle et.</p>
+      <button class="btn-main" style="background:linear-gradient(45deg, #0099ff, #00ffff); color:#000; margin-top:8px;" onclick="adminSimulateOnlineWeek()">ONLINE HAFTAYI SIMÜLE ET</button>
+      <button class="btn-main" style="background:linear-gradient(45deg, #e74c3c, #c0392b); margin-top:8px;" onclick="adminResetOnlineLeague()">ONLINE LIGI SIFIRLA</button>
     </div>
   </div>
 
@@ -224,7 +328,9 @@
     let currentUser = null;
     let selectedPlayerIndex = null;
     let myInventory = [];
+    let fieldPlayers = {}; 
     let currentWeek = 1;
+    let userTeamPower = 0;
 
     let teams = [
       { name: "Samet FC", points: 0, played: 0, isUser: true },
@@ -257,7 +363,7 @@
 
       let { data: user } = await db.from('users').select('*').eq('username', username).maybeSingle();
       if (!user) {
-        const { data: newUser } = await db.from('users').insert([{ username: username }]).select().single();
+        const { data: newUser } = await db.from('users').insert([{ username: username, coins: 1000, points: 0, power: 0 }]).select().single();
         user = newUser;
       }
 
@@ -272,6 +378,7 @@
       if (user.is_admin) document.getElementById('admin-nav').style.display = 'flex';
 
       renderLeague();
+      loadOnlineLeague();
       switchTab('squad', document.querySelector('.nav-item'));
     }
 
@@ -280,6 +387,21 @@
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById('view-' + tabName).classList.add('active-view');
       if (el) el.classList.add('active');
+    }
+
+    function switchLeagueMode(mode) {
+      document.getElementById('mode-offline-btn').classList.remove('active');
+      document.getElementById('mode-online-btn').classList.remove('active');
+      if(mode === 'offline') {
+        document.getElementById('mode-offline-btn').classList.add('active');
+        document.getElementById('league-offline-content').style.display = 'block';
+        document.getElementById('league-online-content').style.display = 'none';
+      } else {
+        document.getElementById('mode-online-btn').classList.add('active');
+        document.getElementById('league-offline-content').style.display = 'none';
+        document.getElementById('league-online-content').style.display = 'block';
+        loadOnlineLeague();
+      }
     }
 
     async function openPack(type, totalCost, count) {
@@ -335,10 +457,19 @@
       alert(`${player.name} seçildi. Şimdi sahadaki bir boş yere tıklayarak yerleştir!`);
     }
 
-    function placePlayer(slotElement) {
+    async function placePlayer(slotElement, slotId) {
       if (selectedPlayerIndex === null || selectedPlayerIndex === undefined) return alert('Önce alttan bir oyuncu seçmelisin!');
       
       const player = myInventory[selectedPlayerIndex];
+
+      const isAlreadyOnField = Object.values(fieldPlayers).some(p => p.name === player.name);
+      if (isAlreadyOnField) {
+        alert(`${player.name} zaten sahada oynuyor! Aynı oyuncuyu birden fazla pozisyona ekleyemezsin.`);
+        selectedPlayerIndex = null;
+        return;
+      }
+
+      fieldPlayers[slotId] = player;
 
       slotElement.innerHTML = `
         <div class="ef-card" style="width:100%; height:100%;">
@@ -349,10 +480,23 @@
         </div>
       `;
 
-      // Sahaya konan oyuncuyu aday listesinden kaldırır
       myInventory.splice(selectedPlayerIndex, 1);
       selectedPlayerIndex = null;
       renderInventory();
+      calculateTeamPower();
+    }
+
+    async function calculateTeamPower() {
+      const activePlayers = Object.values(fieldPlayers);
+      if (activePlayers.length === 0) userTeamPower = 0;
+      else {
+        const sum = activePlayers.reduce((acc, curr) => acc + curr.rating, 0);
+        userTeamPower = Math.round(sum / activePlayers.length);
+      }
+      document.getElementById('team-power-badge').innerText = `Güç: ${userTeamPower}`;
+      if (currentUser) {
+        await db.from('users').update({ power: userTeamPower }).eq('id', currentUser.id);
+      }
     }
 
     function renderLeague() {
@@ -372,18 +516,40 @@
       });
     }
 
+    async function loadOnlineLeague() {
+      let { data: users } = await db.from('users').select('*').order('points', { ascending: false });
+      const tbody = document.getElementById('online-league-body');
+      tbody.innerHTML = '';
+      if(users) {
+        users.forEach((u, i) => {
+          tbody.innerHTML += `
+            <tr style="${currentUser && u.username === currentUser.username ? 'background:rgba(0,153,255,0.2); font-weight:bold;' : ''}">
+              <td>${i + 1}</td>
+              <td style="text-align:left;">${u.username}</td>
+              <td><span style="color:#0099ff; font-weight:bold;">${u.power || 0}</span></td>
+              <td style="color:#ffd700;">${u.points || 0}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
     async function simulateWeek() {
       if (currentWeek > 38) return;
 
-      const myScore = Math.floor(Math.random() * 4);
-      const oppScore = Math.floor(Math.random() * 3);
-      const userTeam = teams.find(t => t.isUser);
+      const oppPower = 75 + Math.floor(Math.random() * 15);
+      const powerDiff = userTeamPower - oppPower;
+      
+      let myScore = Math.max(0, Math.floor(Math.random() * 3) + Math.floor(powerDiff / 10));
+      let oppScore = Math.max(0, Math.floor(Math.random() * 3) - Math.floor(powerDiff / 10));
 
+      const userTeam = teams.find(t => t.isUser);
       userTeam.played++;
+
       if (myScore > oppScore) {
         userTeam.points += 3;
-        currentUser.coins += 50;
-        document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: Galibiyet! ${myScore} - ${oppScore} (+50 Coin)`;
+        currentUser.coins += 500;
+        document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: Galibiyet! ${myScore} - ${oppScore} (+500 Coin)`;
       } else if (myScore === oppScore) {
         userTeam.points += 1;
         document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: Beraberlik ${myScore} - ${oppScore}`;
@@ -409,11 +575,7 @@
         teams.sort((a, b) => b.points - a.points);
         const userRank = teams.findIndex(t => t.isUser) + 1;
         
-        let reward = 0;
-        if(userRank === 1) reward = 2000;
-        else if(userRank <= 3) reward = 1000;
-        else reward = 300;
-
+        let reward = userRank === 1 ? 20000 : (userRank <= 3 ? 10000 : 3000);
         currentUser.coins += reward;
         await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
         document.getElementById('coin-count').innerText = currentUser.coins;
@@ -428,18 +590,12 @@
 
     function resetSeason() {
       currentWeek = 1;
-      teams.forEach(t => {
-        t.points = 0;
-        t.played = 0;
-      });
-
+      teams.forEach(t => { t.points = 0; t.played = 0; });
       document.getElementById('week-num').innerText = 1;
       document.getElementById('play-week-btn').style.display = 'inline-block';
       document.getElementById('reset-league-btn').style.display = 'none';
-      document.getElementById('last-match-result').innerText = "Yeni sezon başladı! Maç yapmak için butonuna bas.";
-
+      document.getElementById('last-match-result').innerText = "Yeni sezon başladı!";
       renderLeague();
-      alert("Yeni Sezon Başladı! Başarılar!");
     }
 
     async function giveCoins() {
@@ -450,6 +606,35 @@
         await db.from('users').update({ coins: user.coins + amount }).eq('username', target);
         alert(`Başarılı! ${target} kullanıcısına ${amount} coin aktarıldı.`);
       }
+    }
+
+    async function adminSimulateOnlineWeek() {
+      let { data: users } = await db.from('users').select('*');
+      if (!users || users.length === 0) return alert('Online ligde oyuncu yok!');
+
+      for (let u of users) {
+        const winChance = 0.3 + ((u.power || 50) / 200); 
+        const rand = Math.random();
+        let addedPoints = 0;
+        if (rand < winChance) addedPoints = 3;
+        else if (rand < winChance + 0.3) addedPoints = 1;
+
+        await db.from('users').update({ points: (u.points || 0) + addedPoints }).eq('id', u.id);
+      }
+      alert('Online Ligde yeni hafta simüle edildi ve puanlar güncellendi!');
+      loadOnlineLeague();
+    }
+
+    async function adminResetOnlineLeague() {
+      if(!confirm('Online lig puanlarını sıfırlamak istediğine emin misin?')) return;
+      let { data: users } = await db.from('users').select('*');
+      if (users) {
+        for (let u of users) {
+          await db.from('users').update({ points: 0 }).eq('id', u.id);
+        }
+      }
+      alert('Online lig puanları sıfırlandı!');
+      loadOnlineLeague();
     }
   </script>
 </body>

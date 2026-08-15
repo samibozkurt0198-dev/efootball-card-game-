@@ -32,12 +32,11 @@
 
     .empty-slot { width: 65px; height: 85px; border: 2px dashed rgba(255,255,255,0.4); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: #aaa; cursor: pointer; background: rgba(0,0,0,0.2); }
 
-    /* Futbolcu Kartı */
-    .ef-card { width: 65px; height: 85px; background: linear-gradient(135deg, #1e2436, #0d1019); border-radius: 8px; position: relative; border: 1px solid #ffd700; color: #fff; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer; flex-shrink: 0; }
-    .ef-card img { width: 100%; height: 68%; object-fit: cover; object-position: top; }
-    .ef-card .rating { position: absolute; top: 2px; left: 3px; font-size: 11px; font-weight: 900; color: #ffd700; text-shadow: 1px 1px 2px #000; }
-    .ef-card .pos { position: absolute; top: 14px; left: 3px; font-size: 8px; color: #fff; font-weight: bold; }
-    .ef-card .name { font-size: 8px; text-align: center; font-weight: bold; padding: 2px; background: #11141d; text-transform: uppercase; white-space: nowrap; overflow: hidden; }
+    /* Resimsiz Sade Oyuncu Kartı */
+    .ef-card { width: 65px; height: 85px; background: linear-gradient(135deg, #1e2436, #0d1019); border-radius: 8px; position: relative; border: 1px solid #ffd700; color: #fff; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4px; }
+    .ef-card .rating { font-size: 18px; font-weight: 900; color: #ffd700; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+    .ef-card .pos { font-size: 10px; color: #0099ff; font-weight: bold; margin-bottom: 4px; }
+    .ef-card .name { font-size: 8px; text-align: center; font-weight: bold; width: 100%; background: #11141d; padding: 2px 0; border-radius: 4px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Oyuncu Envanteri */
     .inventory-title { text-align: left; font-size: 14px; color: #0099ff; margin: 10px 0 5px 0; }
@@ -53,7 +52,8 @@
     .nav-item.active { color: #0099ff; font-weight: bold; }
 
     .pack-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
-    .pack-card { background: #11141d; border: 1px solid #222838; border-radius: 12px; padding: 15px; text-align: center; }
+    .pack-card { background: #11141d; border: 1px solid #222838; border-radius: 12px; padding: 15px; text-align: center; position: relative; }
+    .pack-count-badge { position: absolute; top: 10px; right: 10px; background: #222838; color: #0099ff; border: 1px solid #0099ff; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
     .pack-btns { display: flex; gap: 5px; margin-top: 8px; }
     .pack-btns button { font-size: 11px; padding: 6px; }
   </style>
@@ -166,41 +166,140 @@
     </div>
   </div>
 
-  <!-- Mağaza Ekranı -->
+  <!-- Mağaza Ekranı (Oyuncu Sayıları + Farklı İçerikler) -->
   <div id="view-shop" class="view-section">
     <h3>Paket Mağazası</h3>
     <div class="pack-grid">
       
       <div class="pack-card" style="border-color:#cd7f32;">
+        <span class="pack-count-badge">1 Oyuncu</span>
         <i class="fa-solid fa-box fa-2x" style="color:#cd7f32;"></i>
         <h5 style="margin:5px 0;">Bronz Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 500 Coin</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 2.500 Coin</p>
         <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('bronz', 500, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('bronz', 2500, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('bronz', 5000, 10)">10x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 2500, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 12500, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('bronz', 25000, 10)">10x Aç</button>
         </div>
       </div>
 
       <div class="pack-card" style="border-color:#c0c0c0;">
+        <span class="pack-count-badge">2 Oyuncu</span>
         <i class="fa-solid fa-box-open fa-2x" style="color:#c0c0c0;"></i>
         <h5 style="margin:5px 0;">Gümüş Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 1.200 Coin</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 5.000 Coin</p>
         <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('gumus', 1200, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('gumus', 6000, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('gumus', 12000, 10)">10x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 5000, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 25000, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('gumus', 50000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#e65c00;">
+        <span class="pack-count-badge">3 Oyuncu</span>
+        <i class="fa-solid fa-star fa-2x" style="color:#e65c00;"></i>
+        <h5 style="margin:5px 0;">Süper Lig Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 8.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 8000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 40000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 80000, 10)">10x Aç</button>
         </div>
       </div>
 
       <div class="pack-card" style="border-color:#ffd700;">
+        <span class="pack-count-badge">3 Oyuncu</span>
         <i class="fa-solid fa-gem fa-2x" style="color:#ffd700;"></i>
         <h5 style="margin:5px 0;">Altın Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 3.500 Coin</p>
+        <p style="font-size:10px; color:#aaa;">Tekli: 12.000 Coin</p>
         <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('altin', 3500, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('altin', 17500, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('altin', 35000, 10)">10x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 12000, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 60000, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('altin', 120000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#9b59b6;">
+        <span class="pack-count-badge">4 Oyuncu</span>
+        <i class="fa-solid fa-wand-magic-sparkles fa-2x" style="color:#9b59b6;"></i>
+        <h5 style="margin:5px 0;">Yıldızlar Karma Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 18.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 18000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 90000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 180000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#00ffff;">
+        <span class="pack-count-badge">4 Oyuncu</span>
+        <i class="fa-solid fa-crown fa-2x" style="color:#00ffff;"></i>
+        <h5 style="margin:5px 0;">Elmas Paket</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 25.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" onclick="openPack('elmas', 25000, 1)">1x Aç</button>
+          <button class="btn-main" onclick="openPack('elmas', 125000, 5)">5x Aç</button>
+          <button class="btn-main" onclick="openPack('elmas', 250000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#2ecc71;">
+        <span class="pack-count-badge">3 Oyuncu</span>
+        <i class="fa-solid fa-bolt fa-2x" style="color:#2ecc71;"></i>
+        <h5 style="margin:5px 0;">Geleceğin Yıldızları (Wonderkid)</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 35.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 35000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 175000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 350000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#11998e;">
+        <span class="pack-count-badge">5 Oyuncu</span>
+        <i class="fa-solid fa-trophy fa-2x" style="color:#11998e;"></i>
+        <h5 style="margin:5px 0;">UEFA Şampiyonlar Ligi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 50.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 50000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 250000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 500000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#e74c3c;">
+        <span class="pack-count-badge">5 Oyuncu</span>
+        <i class="fa-solid fa-earth-americas fa-2x" style="color:#e74c3c;"></i>
+        <h5 style="margin:5px 0;">Dünya Kupası Özel Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 75.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 75000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 375000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 750000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#ff007f;">
+        <span class="pack-count-badge">3 Efsane</span>
+        <i class="fa-solid fa-dragon fa-2x" style="color:#ff007f;"></i>
+        <h5 style="margin:5px 0;">Efsanevi ICON Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 100.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 100000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 500000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 1000000, 10)">10x Aç</button>
+        </div>
+      </div>
+
+      <div class="pack-card" style="border-color:#f1c40f;">
+        <span class="pack-count-badge">5 Prime Yıldız</span>
+        <i class="fa-solid fa-fire-flame-curved fa-2x" style="color:#f1c40f;"></i>
+        <h5 style="margin:5px 0;">Prime All-Stars Paketi</h5>
+        <p style="font-size:10px; color:#aaa;">Tekli: 150.000 Coin</p>
+        <div class="pack-btns">
+          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 150000, 1)">1x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 750000, 5)">5x Aç</button>
+          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 1500000, 10)">10x Aç</button>
         </div>
       </div>
 
@@ -252,18 +351,72 @@
       { name: "Man. City", points: 0, played: 0 }, { name: "Arsenal", points: 0, played: 0 }
     ];
 
-    const allPlayersDatabase = [
-      { id:1, name: "L. Messi", rating: 98, pos: "RW", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3s1X5B8x9uX5A1d2K" },
-      { id:2, name: "C. Ronaldo", rating: 96, pos: "ST", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6-m7y9" },
-      { id:3, name: "K. Mbappe", rating: 95, pos: "ST", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6s8" },
-      { id:4, name: "Vinicius Jr", rating: 93, pos: "LW", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy23" },
-      { id:5, name: "J. Bellingham", rating: 92, pos: "CAM", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS23" },
-      { id:6, name: "Arda Güler", rating: 88, pos: "CM", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcA90" },
-      { id:7, name: "V. Van Dijk", rating: 91, pos: "CB", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcD89" },
-      { id:8, name: "T. Courtois", rating: 90, pos: "GK", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcC77" }
-    ];
+    /* Her Pakete Özel Farklı Futbolcu Havuzu */
+    const packPools = {
+      bronz: [
+        { name: "C. Tosun", rating: 74, pos: "ST" }, { name: "M. Günok", rating: 75, pos: "GK" },
+        { name: "A. Ömür", rating: 73, pos: "CAM" }, { name: "S. Salih", rating: 72, pos: "CM" },
+        { name: "E. Elmas", rating: 76, pos: "CM" }, { name: "Z. Çelik", rating: 75, pos: "RB" }
+      ],
+      gumus: [
+        { name: "K. Aktürkoğlu", rating: 79, pos: "LW" }, { name: "İ. Kahveci", rating: 80, pos: "RW" },
+        { name: "U. Çakır", rating: 79, pos: "GK" }, { name: "O. Yılmaz", rating: 78, pos: "RW" },
+        { name: "M. Yüksek", rating: 77, pos: "CM" }, { name: "C. Söyüncü", rating: 78, pos: "CB" }
+      ],
+      superlig: [
+        { name: "M. Icardi", rating: 85, pos: "ST" }, { name: "E. Dzeko", rating: 84, pos: "ST" },
+        { name: "D. Tadic", rating: 84, pos: "LW" }, { name: "F. Muslera", rating: 83, pos: "GK" },
+        { name: "R. Silva", rating: 83, pos: "CAM" }, { name: "L. Torreira", rating: 83, pos: "CM" },
+        { name: "F. Kadioglu", rating: 82, pos: "LB" }, { name: "V. Osimhen", rating: 88, pos: "ST" }
+      ],
+      altin: [
+        { name: "L. Martinez", rating: 86, pos: "ST" }, { name: "R. Leao", rating: 86, pos: "LW" },
+        { name: "P. Dybala", rating: 85, pos: "CAM" }, { name: "D. Rice", rating: 86, pos: "CM" },
+        { name: "M. Neuer", rating: 85, pos: "GK" }, { name: "M. Rashford", rating: 84, pos: "LW" }
+      ],
+      stars: [
+        { name: "A. Griezmann", rating: 88, pos: "CAM" }, { name: "B. Fernandes", rating: 88, pos: "CAM" },
+        { name: "Son Heung-min", rating: 87, pos: "LW" }, { name: "J. Kimmich", rating: 87, pos: "CM" },
+        { name: "M. Salah", rating: 89, pos: "RW" }, { name: "R. Lewandowski", rating: 88, pos: "ST" }
+      ],
+      elmas: [
+        { name: "E. Haaland", rating: 92, pos: "ST" }, { name: "H. Kane", rating: 90, pos: "ST" },
+        { name: "T. Courtois", rating: 90, pos: "GK" }, { name: "R. Dias", rating: 89, pos: "CB" },
+        { name: "Rodri", rating: 91, pos: "CM" }, { name: "L. Modric", rating: 88, pos: "CM" }
+      ],
+      wonderkid: [
+        { name: "L. Yamal", rating: 89, pos: "RW" }, { name: "Arda Güler", rating: 88, pos: "CAM" },
+        { name: "Endrick", rating: 86, pos: "ST" }, { name: "K. Mainoo", rating: 84, pos: "CM" },
+        { name: "Warren Zaïre-Emery", rating: 85, pos: "CM" }, { name: "Savinho", rating: 84, pos: "RW" }
+      ],
+      ucl: [
+        { name: "J. Bellingham", rating: 94, pos: "CAM" }, { name: "Vinicius Jr", rating: 94, pos: "LW" },
+        { name: "K. De Bruyne", rating: 93, pos: "CAM" }, { name: "V. Van Dijk", rating: 92, pos: "CB" },
+        { name: "K. Mbappe", rating: 95, pos: "ST" }, { name: "A. Rüdiger", rating: 90, pos: "CB" }
+      ],
+      worldcup: [
+        { name: "L. Messi", rating: 97, pos: "RW" }, { name: "C. Ronaldo", rating: 96, pos: "ST" },
+        { name: "Neymar Jr", rating: 93, pos: "LW" }, { name: "A. Di Maria", rating: 89, pos: "RW" },
+        { name: "L. Modric (WC)", rating: 91, pos: "CM" }, { name: "E. Martinez", rating: 89, pos: "GK" }
+      ],
+      icon: [
+        { name: "Pelé", rating: 99, pos: "ST" }, { name: "D. Maradona", rating: 98, pos: "CAM" },
+        { name: "Z. Zidane", rating: 97, pos: "CAM" }, { name: "Ronaldinho", rating: 96, pos: "LW" },
+        { name: "J. Cruyff", rating: 96, pos: "ST" }, { name: "P. Maldini", rating: 95, pos: "CB" }
+      ],
+      prime: [
+        { name: "Prime C. Ronaldo", rating: 99, pos: "ST" }, { name: "Prime L. Messi", rating: 99, pos: "RW" },
+        { name: "Ronaldo Nazario", rating: 98, pos: "ST" }, { name: "Prime Henry", rating: 96, pos: "ST" },
+        { name: "Prime Kaká", rating: 95, pos: "CAM" }, { name: "Prime Yashin", rating: 96, pos: "GK" }
+      ]
+    };
 
-    // SAYFA YÜKLENDİĞİNDE OTOMATİK VERİ ÇEK
+    /* Paketlerin Kaçar Oyuncu Vereceği */
+    const packPlayerCounts = {
+      bronz: 1, gumus: 2, superlig: 3, altin: 3, stars: 4,
+      elmas: 4, wonderkid: 3, ucl: 5, worldcup: 5, icon: 3, prime: 5
+    };
+
     window.onload = function() {
       const savedUser = localStorage.getItem('ef_user');
       if (savedUser) {
@@ -285,7 +438,7 @@
 
       let { data: user } = await db.from('users').select('*').eq('username', usernameInput).maybeSingle();
       if (!user) {
-        const { data: newUser } = await db.from('users').insert([{ username: usernameInput, coins: 1000, points: 0, power: 0 }]).select().single();
+        const { data: newUser } = await db.from('users').insert([{ username: usernameInput, coins: 50000, points: 0, power: 0 }]).select().single();
         user = newUser;
       }
 
@@ -297,7 +450,6 @@
     function loadUserData() {
       teams[0].name = currentUser.username + " FC";
 
-      // Yerel verileri yükle
       const savedInv = localStorage.getItem(`ef_inventory_${currentUser.username}`);
       if (savedInv) myInventory = JSON.parse(savedInv);
 
@@ -342,7 +494,7 @@
       }
     }
 
-    async function openPack(type, totalCost, count) {
+    async function openPack(packType, totalCost, packCount) {
       if (currentUser.coins < totalCost) return alert('Yeterli coin yok!');
       currentUser.coins -= totalCost;
       await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
@@ -351,15 +503,18 @@
       const packResultDiv = document.getElementById('pack-result');
       packResultDiv.innerHTML = '';
 
-      for(let i = 0; i < count; i++) {
-        const p = allPlayersDatabase[Math.floor(Math.random() * allPlayersDatabase.length)];
+      const pool = packPools[packType] || packPools['bronz'];
+      const playersPerPack = packPlayerCounts[packType] || 1;
+      const totalPlayersToGive = playersPerPack * packCount;
+
+      for(let i = 0; i < totalPlayersToGive; i++) {
+        const p = pool[Math.floor(Math.random() * pool.length)];
         myInventory.push(p);
 
         packResultDiv.innerHTML += `
           <div class="ef-card">
             <span class="rating">${p.rating}</span>
             <span class="pos">${p.pos}</span>
-            <img src="${p.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=11141d&color=ffd700'">
             <div class="name">${p.name}</div>
           </div>
         `;
@@ -383,7 +538,6 @@
           <div class="ef-card" onclick="selectPlayerFromInv(${index})">
             <span class="rating">${p.rating}</span>
             <span class="pos">${p.pos}</span>
-            <img src="${p.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=11141d&color=ffd700'">
             <div class="name">${p.name}</div>
           </div>
         `;
@@ -427,7 +581,6 @@
             <div class="ef-card" style="width:100%; height:100%;">
               <span class="rating">${player.rating}</span>
               <span class="pos">${player.pos}</span>
-              <img src="${player.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=11141d&color=ffd700'">
               <div class="name">${player.name}</div>
             </div>
           `;
@@ -497,8 +650,8 @@
 
       if (myScore > oppScore) {
         userTeam.points += 3;
-        currentUser.coins += 500;
-        document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: Galibiyet! ${myScore} - ${oppScore} (+500 Coin)`;
+        currentUser.coins += 2500;
+        document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: Galibiyet! ${myScore} - ${oppScore} (+2.500 Coin)`;
       } else if (myScore === oppScore) {
         userTeam.points += 1;
         document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: Beraberlik ${myScore} - ${oppScore}`;
@@ -525,7 +678,7 @@
         teams.sort((a, b) => b.points - a.points);
         const userRank = teams.findIndex(t => t.isUser) + 1;
         
-        let reward = userRank === 1 ? 20000 : (userRank <= 3 ? 10000 : 3000);
+        let reward = userRank === 1 ? 100000 : (userRank <= 3 ? 50000 : 20000);
         currentUser.coins += reward;
         await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
         document.getElementById('coin-count').innerText = currentUser.coins;

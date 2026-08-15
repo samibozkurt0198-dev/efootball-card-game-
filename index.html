@@ -3,64 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>eFootball Mobile Ultimate</title>
+  <title>eFootball Pro League</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
-    body { background: #0a0a12; color: #fff; padding-bottom: 70px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    body { background: #0b0e14; color: #fff; padding-bottom: 75px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
     
-    /* Header */
-    .header { width: 100%; background: linear-gradient(180deg, #16192b 0%, #0a0a12 100%); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2e45; position: sticky; top: 0; z-index: 100; }
-    .user-info { display: flex; align-items: center; gap: 10px; font-weight: bold; }
-    .coin-badge { background: #1e2238; border: 1px solid #ffd700; color: #ffd700; padding: 5px 12px; border-radius: 20px; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+    .header { width: 100%; background: #131722; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232838; position: sticky; top: 0; z-index: 100; }
+    .coin-badge { background: #1c2130; border: 1px solid #ffd700; color: #ffd700; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px; }
 
-    /* Views */
-    .view-section { display: none; width: 100%; max-width: 500px; padding: 20px; text-align: center; }
+    .view-section { display: none; width: 100%; max-width: 500px; padding: 15px; text-align: center; }
     .active-view { display: block; }
 
-    /* Login Screen */
-    .login-card { background: #16192b; border: 1px solid #2a2e45; border-radius: 16px; padding: 30px; margin-top: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .login-card input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2a2e45; background: #0a0a12; color: #fff; margin: 15px 0; font-size: 16px; text-align: center; }
-    
-    /* Buttons */
-    .btn-main { background: linear-gradient(45deg, #0072ff, #00c6ff); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,114,255,0.4); }
-    .btn-main:active { transform: scale(0.98); }
+    .login-card { background: #131722; border: 1px solid #232838; border-radius: 16px; padding: 30px; margin-top: 40px; }
+    .login-card input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2f364a; background: #0b0e14; color: #fff; margin: 15px 0; text-align: center; font-size: 16px; }
 
-    /* Football Pitch (Saha) */
-    .pitch { background: repeating-linear-gradient(0deg, #2e8b57, #2e8b57 30px, #27774a 30px, #27774a 60px); width: 100%; height: 420px; border-radius: 12px; border: 3px solid rgba(255,255,255,0.6); position: relative; overflow: hidden; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
-    .pitch-line { position: absolute; border: 2px solid rgba(255,255,255,0.4); }
-    .center-circle { width: 100px; height: 100px; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .penalty-area { width: 200px; height: 80px; bottom: 0; left: 50%; transform: translateX(-50%); border-bottom: none; }
-    
-    /* Player Squad Slot */
-    .squad-grid { position: absolute; width: 100%; height: 100%; display: grid; grid-template-rows: repeat(4, 1fr); padding: 10px; }
+    .btn-main { background: linear-gradient(45deg, #0052cc, #0099ff); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+
+    /* Saha ve Kadro */
+    .pitch { background: repeating-linear-gradient(0deg, #1b5e20, #1b5e20 30px, #2e7d32 30px, #2e7d32 60px); width: 100%; height: 440px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.5); position: relative; }
+    .squad-grid { position: absolute; width: 100%; height: 100%; display: grid; grid-template-rows: repeat(4, 1fr); padding: 5px; }
     .squad-row { display: flex; justify-content: space-around; align-items: center; }
 
-    /* eFootball Card Component */
-    .ef-card { width: 70px; height: 100px; background: linear-gradient(135deg, #ffd700, #ff8c00); border-radius: 8px; position: relative; padding: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.6); border: 1px solid #fff; color: #111; font-weight: bold; cursor: pointer; }
-    .ef-card img { width: 100%; height: 60%; object-fit: cover; border-radius: 4px 4px 0 0; }
-    .ef-card .rating { position: absolute; top: 2px; left: 4px; font-size: 12px; line-height: 1; color: #000; }
-    .ef-card .pos { position: absolute; top: 14px; left: 4px; font-size: 9px; color: #333; }
-    .ef-card .name { font-size: 9px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; text-transform: uppercase; }
+    /* Gerçek Fotoğraflı Kartlar */
+    .ef-card { width: 75px; height: 105px; background: linear-gradient(135deg, #1a1c29, #0d0e15); border-radius: 8px; position: relative; border: 1px solid #ffd700; color: #fff; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .ef-card img { width: 100%; height: 70%; object-fit: cover; object-position: top; }
+    .ef-card .rating { position: absolute; top: 2px; left: 4px; font-size: 13px; font-weight: 900; color: #ffd700; text-shadow: 1px 1px 2px #000; }
+    .ef-card .pos { position: absolute; top: 16px; left: 4px; font-size: 9px; color: #fff; font-weight: bold; }
+    .ef-card .name { font-size: 9px; text-align: center; font-weight: bold; padding: 2px; background: #131722; text-transform: uppercase; white-space: nowrap; overflow: hidden; }
 
-    /* Bottom Navigation Bar */
-    .navbar { position: fixed; bottom: 0; width: 100%; background: #16192b; border-top: 1px solid #2a2e45; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
-    .nav-item { color: #8a8fef; display: flex; flex-direction: column; align-items: center; font-size: 11px; cursor: pointer; gap: 4px; text-decoration: none; }
-    .nav-item.active { color: #00c6ff; }
-    .nav-item i { font-size: 18px; }
+    /* Lig & Puan Durumu Tablosu */
+    .league-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; background: #131722; border-radius: 8px; overflow: hidden; }
+    .league-table th, .league-table td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #232838; }
+    .league-table th { background: #1c2130; color: #0099ff; }
 
-    /* Admin Styles */
-    .admin-box { background: #1e2238; border: 1px solid #ffd700; border-radius: 12px; padding: 15px; margin-top: 15px; text-align: left; }
-    .admin-box input { width: 100%; padding: 8px; margin: 8px 0; background: #0a0a12; border: 1px solid #333; color: #fff; border-radius: 4px; }
+    .navbar { position: fixed; bottom: 0; width: 100%; background: #131722; border-top: 1px solid #232838; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
+    .nav-item { color: #6c757d; display: flex; flex-direction: column; align-items: center; font-size: 11px; cursor: pointer; gap: 4px; }
+    .nav-item.active { color: #0099ff; font-weight: bold; }
+
+    .admin-box { background: #131722; border: 1px solid #ffd700; border-radius: 12px; padding: 15px; margin-top: 15px; text-align: left; }
+    .admin-box input { width: 100%; padding: 8px; margin: 8px 0; background: #0b0e14; border: 1px solid #2f364a; color: #fff; border-radius: 4px; }
   </style>
 </head>
 <body>
 
-  <!-- Üst Bilgi Çubuğu -->
+  <!-- Header -->
   <div class="header" id="top-header" style="display:none;">
-    <div class="user-info">
-      <i class="fa-solid fa-user-circle fa-lg"></i>
+    <div style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+      <i class="fa-solid fa-shield-cat fa-lg" style="color:#0099ff;"></i>
       <span id="user-display">Samet</span>
     </div>
     <div class="coin-badge">
@@ -69,92 +60,98 @@
     </div>
   </div>
 
-  <!-- Giriş Ekranı -->
+  <!-- Giriş -->
   <div id="view-login" class="view-section active-view">
     <div class="login-card">
-      <i class="fa-solid fa-futbol fa-3x" style="color: #00c6ff;"></i>
-      <h2 style="margin-top: 15px;">eFootball Ultimate</h2>
-      <p style="color: #6c757d; font-size: 13px; margin-top: 5px;">Kulübünü yönet, kadronu kur!</p>
-      <input type="text" id="username" placeholder="Kullanıcı Adı Girin">
-      <button class="btn-main" onclick="login()">KULÜBE GİRİŞ YAP</button>
+      <i class="fa-solid fa-trophy fa-3x" style="color: #ffd700;"></i>
+      <h2 style="margin-top: 15px;">eFootball Pro League</h2>
+      <p style="color: #6c757d; font-size: 12px; margin-top: 5px;">Sezonu Başlat & Şampiyon Ol</p>
+      <input type="text" id="username" placeholder="Kullanıcı Adı">
+      <button class="btn-main" onclick="login()">KULÜBÜ YÖNET</button>
     </div>
   </div>
 
-  <!-- Kadro Ekranı -->
+  <!-- Kadro -->
   <div id="view-squad" class="view-section">
-    <h3 style="margin-bottom: 10px; text-align: left;">Ana Kadro (4-3-3)</h3>
+    <h3 style="margin-bottom: 10px; text-align: left;">Saha Dizilişi (4-3-3)</h3>
     <div class="pitch">
-      <div class="pitch-line center-circle"></div>
-      <div class="pitch-line penalty-area"></div>
-      
       <div class="squad-grid">
-        <!-- Forvetler -->
         <div class="squad-row">
-          <div class="ef-card"><span class="rating">93</span><span class="pos">LW</span><img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=100"><div class="name">Vinicius</div></div>
-          <div class="ef-card"><span class="rating">95</span><span class="pos">ST</span><img src="https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=100"><div class="name">Mbappe</div></div>
-          <div class="ef-card"><span class="rating">96</span><span class="pos">RW</span><img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=100"><div class="name">Messi</div></div>
+          <div class="ef-card"><span class="rating">93</span><span class="pos">LW</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Vinicius_Jr_2021.jpg/400px-Vinicius_Jr_2021.jpg"><div class="name">Vinicius</div></div>
+          <div class="ef-card"><span class="rating">95</span><span class="pos">ST</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Kylian_Mbapp%C3%A9_2018.jpg/400px-Kylian_Mbapp%C3%A9_2018.jpg"><div class="name">Mbappe</div></div>
+          <div class="ef-card"><span class="rating">96</span><span class="pos">RW</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Lionel_Messi_20180626.jpg/400px-Lionel_Messi_20180626.jpg"><div class="name">Messi</div></div>
         </div>
-        <!-- Orta Saha -->
         <div class="squad-row">
-          <div class="ef-card"><span class="rating">89</span><span class="pos">CM</span><img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=100"><div class="name">Pedri</div></div>
-          <div class="ef-card"><span class="rating">91</span><span class="pos">CAM</span><img src="https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=100"><div class="name">Bellingham</div></div>
-          <div class="ef-card"><span class="rating">88</span><span class="pos">CM</span><img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=100"><div class="name">Güler</div></div>
+          <div class="ef-card"><span class="rating">89</span><span class="pos">CM</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Pedri_2021.jpg/400px-Pedri_2021.jpg"><div class="name">Pedri</div></div>
+          <div class="ef-card"><span class="rating">92</span><span class="pos">CAM</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Jude_Bellingham_2023.jpg/400px-Jude_Bellingham_2023.jpg"><div class="name">Bellingham</div></div>
+          <div class="ef-card"><span class="rating">86</span><span class="pos">CM</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Arda_G%C3%Bcler_2023.jpg/400px-Arda_G%C3%Bcler_2023.jpg"><div class="name">A. Güler</div></div>
         </div>
-        <!-- Defans -->
         <div class="squad-row">
-          <div class="ef-card"><span class="rating">87</span><span class="pos">LB</span><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=100"><div class="name">Davies</div></div>
-          <div class="ef-card"><span class="rating">91</span><span class="pos">CB</span><img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=100"><div class="name">Van Dijk</div></div>
-          <div class="ef-card"><span class="rating">89</span><span class="pos">CB</span><img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=100"><div class="name">Rüdiger</div></div>
+          <div class="ef-card"><span class="rating">88</span><span class="pos">LB</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Alphonso_Davies_2021.jpg/400px-Alphonso_Davies_2021.jpg"><div class="name">Davies</div></div>
+          <div class="ef-card"><span class="rating">91</span><span class="pos">CB</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Virgil_van_Dijk_2021.jpg/400px-Virgil_van_Dijk_2021.jpg"><div class="name">Van Dijk</div></div>
+          <div class="ef-card"><span class="rating">89</span><span class="pos">CB</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Antonio_R%C3%BCdiger_2021.jpg/400px-Antonio_R%C3%BCdiger_2021.jpg"><div class="name">Rüdiger</div></div>
         </div>
-        <!-- Kaleci -->
         <div class="squad-row">
-          <div class="ef-card"><span class="rating">90</span><span class="pos">GK</span><img src="https://images.unsplash.com/photo-1510566337590-2fc1f21d0faa?w=100"><div class="name">Courtois</div></div>
+          <div class="ef-card"><span class="rating">90</span><span class="pos">GK</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Thibaut_Courtois_2018.jpg/400px-Thibaut_Courtois_2018.jpg"><div class="name">Courtois</div></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Paket Açma Ekranı -->
+  <!-- Lig & Maç Modu -->
+  <div id="view-league" class="view-section">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3>Süper Lig (Hafta <span id="week-num">1</span>/38)</h3>
+      <button class="btn-main" style="width:auto; padding:6px 12px;" onclick="simulateWeek()">Haftayı Oyna</button>
+    </div>
+
+    <div id="last-match-result" style="background:#131722; padding:10px; border-radius:8px; margin-bottom:10px; font-size:12px; color:#0099ff;">
+      Maç oynamak için "Haftayı Oyna" butonuna bas.
+    </div>
+
+    <table class="league-table">
+      <thead>
+        <tr>
+          <th>Sıra</th>
+          <th style="text-align:left;">Takım</th>
+          <th>O</th>
+          <th>G</th>
+          <th>P</th>
+        </tr>
+      </thead>
+      <tbody id="league-body">
+        <!-- JS ile dolacak -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mağaza -->
   <div id="view-shop" class="view-section">
-    <h3>Mağaza & Paketler</h3>
-    <div style="background: #16192b; padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #ffd700;">
-      <i class="fa-solid fa-box-open fa-3x" style="color: #ffd700;"></i>
-      <h4 style="margin: 10px 0;">Efsanevi Kulüp Paketi</h4>
-      <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">+85 Reyting garantili özel oyuncu!</p>
-      <button class="btn-main" style="background: linear-gradient(45deg, #ffd700, #ffa500); color:#000;" onclick="openPack()">200 COIN İLE AÇ</button>
+    <h3>Özel Paketler</h3>
+    <div style="background:#131722; padding:20px; border-radius:12px; margin-top:15px; border:1px solid #ffd700;">
+      <i class="fa-solid fa-box-open fa-3x" style="color:#ffd700;"></i>
+      <h4 style="margin:10px 0;">Iconic Spin Paketi</h4>
+      <button class="btn-main" style="background:linear-gradient(45deg, #ffd700, #ffa500); color:#000;" onclick="openPack()">200 COIN İLE AÇ</button>
     </div>
-    <div id="pack-result" style="margin-top: 20px;"></div>
+    <div id="pack-result" style="margin-top:20px;"></div>
   </div>
 
-  <!-- Maç Ekranı -->
-  <div id="view-match" class="view-section">
-    <h3>Online Maç Modu</h3>
-    <div style="background: #16192b; padding: 30px; border-radius: 12px; margin-top: 15px; border: 1px solid #2a2e45;">
-      <i class="fa-solid fa-trophy fa-3x" style="color: #00c6ff;"></i>
-      <h4 style="margin-top: 15px;">Klasman Maçı Yap</h4>
-      <p style="font-size: 12px; color: #aaa; margin: 10px 0;">Rakip aranıyor ve simüle ediliyor...</p>
-      <button class="btn-main" onclick="playMatch()">MAÇA BAŞLA</button>
-      <div id="match-result" style="margin-top: 15px; font-weight: bold; font-size: 18px;"></div>
-    </div>
-  </div>
-
-  <!-- Admin Paneli -->
+  <!-- Admin -->
   <div id="view-admin" class="view-section">
     <div class="admin-box">
-      <h3 style="color: #ffd700;"><i class="fa-solid fa-user-shield"></i> Admin Yönetimi</h3>
-      <input type="text" id="target-user" placeholder="Hedef Kullanıcı Adı">
-      <input type="number" id="coin-amount" placeholder="Eklenecek Coin">
-      <button class="btn-main" style="margin-top: 5px;" onclick="giveCoins()">COIN EKLE</button>
-      <button class="btn-main" style="background: red; margin-top: 10px;" onclick="banUser()">KULLANICIYI BANLA</button>
+      <h3 style="color:#ffd700;"><i class="fa-solid fa-crown"></i> Admin Paneli</h3>
+      <input type="text" id="target-user" placeholder="Kullanıcı Adı">
+      <input type="number" id="coin-amount" placeholder="Coin Miktarı">
+      <button class="btn-main" onclick="giveCoins()">COIN EKLE</button>
     </div>
   </div>
 
-  <!-- Alt Menü (Navbar) -->
+  <!-- Navbar -->
   <div class="navbar" id="bottom-nav" style="display:none;">
-    <a class="nav-item active" onclick="switchTab('squad', this)"><i class="fa-solid fa-shield-halved"></i>Kadro</a>
-    <a class="nav-item" onclick="switchTab('shop', this)"><i class="fa-solid fa-store"></i>Mağaza</a>
-    <a class="nav-item" onclick="switchTab('match', this)"><i class="fa-solid fa-gamepad"></i>Maç Yap</a>
-    <a class="nav-item" id="admin-nav" style="display:none;" onclick="switchTab('admin', this)"><i class="fa-solid fa-crown"></i>Admin</a>
+    <div class="nav-item active" onclick="switchTab('squad', this)"><i class="fa-solid fa-shield-halved"></i>Kadro</div>
+    <div class="nav-item" onclick="switchTab('league', this)"><i class="fa-solid fa-trophy"></i>Lig</div>
+    <div class="nav-item" onclick="switchTab('shop', this)"><i class="fa-solid fa-store"></i>Mağaza</div>
+    <div class="nav-item" id="admin-nav" style="display:none;" onclick="switchTab('admin', this)"><i class="fa-solid fa-user-shield"></i>Admin</div>
   </div>
 
   <script>
@@ -163,39 +160,104 @@
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentUser = null;
+    let currentWeek = 1;
+
+    let teams = [
+      { name: "Samet FC", played: 0, won: 0, points: 0, isUser: true },
+      { name: "Real Madrid", played: 0, won: 0, points: 0 },
+      { name: "Manchester City", played: 0, won: 0, points: 0 },
+      { name: "Barcelona", played: 0, won: 0, points: 0 },
+      { name: "Bayern München", played: 0, won: 0, points: 0 },
+      { name: "PSG", played: 0, won: 0, points: 0 }
+    ];
 
     async function login() {
       const username = document.getElementById('username').value.trim();
-      if (!username) return alert('Lütfen bir ad girin!');
+      if (!username) return alert('Adını yaz!');
 
       let { data: user } = await db.from('users').select('*').eq('username', username).maybeSingle();
-
       if (!user) {
         const { data: newUser } = await db.from('users').insert([{ username: username }]).select().single();
         user = newUser;
       }
 
-      if (user.is_banned) return alert('Hesabınız engellendi!');
-
       currentUser = user;
+      teams[0].name = user.username + " FC";
+
       document.getElementById('top-header').style.display = 'flex';
       document.getElementById('bottom-nav').style.display = 'flex';
       document.getElementById('user-display').innerText = user.username;
       document.getElementById('coin-count').innerText = user.coins;
 
-      if (user.is_admin) {
-        document.getElementById('admin-nav').style.display = 'flex';
-      }
+      if (user.is_admin) document.getElementById('admin-nav').style.display = 'flex';
 
+      renderLeague();
       switchTab('squad', document.querySelector('.nav-item'));
     }
 
     function switchTab(tabName, el) {
       document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      
       document.getElementById('view-' + tabName).classList.add('active-view');
       if (el) el.classList.add('active');
+    }
+
+    function renderLeague() {
+      teams.sort((a, b) => b.points - a.points);
+      const tbody = document.getElementById('league-body');
+      tbody.innerHTML = '';
+      teams.forEach((t, index) => {
+        tbody.innerHTML += `
+          <tr style="${t.isUser ? 'background:rgba(0,153,255,0.2); font-weight:bold;' : ''}">
+            <td>${index + 1}</td>
+            <td style="text-align:left;">${t.name}</td>
+            <td>${t.played}</td>
+            <td>${t.won}</td>
+            <td style="color:#ffd700;">${t.points}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function simulateWeek() {
+      if (currentWeek > 38) return alert('Sezon bitti!');
+
+      // Kullanıcının Maçı
+      const opponent = teams.filter(t => !t.isUser)[Math.floor(Math.random() * 5)];
+      const myScore = Math.floor(Math.random() * 4);
+      const oppScore = Math.floor(Math.random() * 3);
+
+      const userTeam = teams.find(t => t.isUser);
+      userTeam.played++;
+      opponent.played++;
+
+      if (myScore > oppScore) {
+        userTeam.won++;
+        userTeam.points += 3;
+        currentUser.coins += 50;
+        document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: ${userTeam.name} ${myScore} - ${oppScore} ${opponent.name} (Galibiyet! +50 Coin)`;
+      } else if (myScore === oppScore) {
+        userTeam.points += 1;
+        opponent.points += 1;
+        document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: ${userTeam.name} ${myScore} - ${oppScore} ${opponent.name} (Beraberlik)`;
+      } else {
+        opponent.won++;
+        opponent.points += 3;
+        document.getElementById('last-match-result').innerText = `Hafta ${currentWeek}: ${userTeam.name} ${myScore} - ${oppScore} ${opponent.name} (Mağlubiyet)`;
+      }
+
+      // Diğer takımların maçlarını simüle et
+      teams.filter(t => !t.isUser && t !== opponent).forEach(t => {
+        t.played++;
+        if (Math.random() > 0.4) { t.won++; t.points += 3; }
+      });
+
+      db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
+      document.getElementById('coin-count').innerText = currentUser.coins;
+
+      currentWeek++;
+      document.getElementById('week-num').innerText = currentWeek;
+      renderLeague();
     }
 
     async function openPack() {
@@ -204,42 +266,22 @@
       await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
       document.getElementById('coin-count').innerText = currentUser.coins;
 
-      const samplePlayers = [
-        { name: "Ronaldo", rating: 95, pos: "ST", img: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=100" },
-        { name: "Neymar", rating: 92, pos: "LW", img: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=100" },
-        { name: "Salah", rating: 91, pos: "RW", img: "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=100" }
+      const icons = [
+        { name: "C. Ronaldo", rating: 97, pos: "ST", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cristiano_Ronaldo_2018.jpg/400px-Cristiano_Ronaldo_2018.jpg" },
+        { name: "L. Messi", rating: 98, pos: "RW", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Lionel_Messi_20180626.jpg/400px-Lionel_Messi_20180626.jpg" }
       ];
-      const p = samplePlayers[Math.floor(Math.random() * samplePlayers.length)];
+      const p = icons[Math.floor(Math.random() * icons.length)];
 
       document.getElementById('pack-result').innerHTML = `
         <div style="display:flex; justify-content:center;">
           <div class="ef-card" style="width:100px; height:140px;">
-            <span class="rating" style="font-size:16px;">${p.rating}</span>
-            <span class="pos" style="font-size:11px; top:18px;">${p.pos}</span>
-            <img src="${p.img}" style="height:65%;">
-            <div class="name" style="font-size:11px;">${p.name}</div>
+            <span class="rating">${p.rating}</span>
+            <span class="pos" style="top:18px;">${p.pos}</span>
+            <img src="${p.img}">
+            <div class="name">${p.name}</div>
           </div>
         </div>
       `;
-    }
-
-    function playMatch() {
-      const res = document.getElementById('match-result');
-      res.innerText = "Maç Yapılıyor...";
-      setTimeout(async () => {
-        const myGoals = Math.floor(Math.random() * 4);
-        const oppGoals = Math.floor(Math.random() * 3);
-        if (myGoals > oppGoals) {
-          currentUser.coins += 100;
-          await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
-          document.getElementById('coin-count').innerText = currentUser.coins;
-          res.innerText = `GALİBİYET! ${myGoals} - ${oppGoals} (+100 Coin)`;
-          res.style.color = "#00ff66";
-        } else {
-          res.innerText = `MAĞLUBİYET! ${myGoals} - ${oppGoals}`;
-          res.style.color = "#ff4444";
-        }
-      }, 1500);
     }
 
     async function giveCoins() {
@@ -248,14 +290,8 @@
       const { data: user } = await db.from('users').select('*').eq('username', target).single();
       if (user) {
         await db.from('users').update({ coins: user.coins + amount }).eq('username', target);
-        alert(`Başarılı! ${target} kullanıcısına ${amount} coin aktarıldı.`);
+        alert(`Başarılı! ${target} kullanıcısına ${amount} coin eklendi.`);
       }
-    }
-
-    async function banUser() {
-      const target = document.getElementById('target-user').value;
-      await db.from('users').update({ is_banned: true }).eq('username', target);
-      alert(`${target} banlandı.`);
     }
   </script>
 </body>

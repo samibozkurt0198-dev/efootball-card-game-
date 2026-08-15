@@ -81,22 +81,22 @@
     <div class="pitch">
       <div class="squad-grid">
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer('LW')">LW</div>
-          <div class="empty-slot" onclick="placePlayer('ST')">ST</div>
-          <div class="empty-slot" onclick="placePlayer('RW')">RW</div>
+          <div class="empty-slot" onclick="placePlayer(this)">LW</div>
+          <div class="empty-slot" onclick="placePlayer(this)">ST</div>
+          <div class="empty-slot" onclick="placePlayer(this)">RW</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer('CM1')">CM</div>
-          <div class="empty-slot" onclick="placePlayer('CAM')">CAM</div>
-          <div class="empty-slot" onclick="placePlayer('CM2')">CM</div>
+          <div class="empty-slot" onclick="placePlayer(this)">CM</div>
+          <div class="empty-slot" onclick="placePlayer(this)">CAM</div>
+          <div class="empty-slot" onclick="placePlayer(this)">CM</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer('LB')">LB</div>
-          <div class="empty-slot" onclick="placePlayer('CB1')">CB</div>
-          <div class="empty-slot" onclick="placePlayer('CB2')">CB</div>
+          <div class="empty-slot" onclick="placePlayer(this)">LB</div>
+          <div class="empty-slot" onclick="placePlayer(this)">CB</div>
+          <div class="empty-slot" onclick="placePlayer(this)">CB</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer('GK')">GK</div>
+          <div class="empty-slot" onclick="placePlayer(this)">GK</div>
         </div>
       </div>
     </div>
@@ -110,8 +110,9 @@
   <!-- Lig Ekranı -->
   <div id="view-league" class="view-section">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <h4>Süper Lig (<span id="week-num">1</span>/38)</h4>
-      <button class="btn-main" style="width:auto; padding:6px 12px;" onclick="simulateWeek()">Haftayı Oyna</button>
+      <h4>Süper Lig (Hafta <span id="week-num">1</span>/38)</h4>
+      <button id="play-week-btn" class="btn-main" style="width:auto; padding:6px 12px;" onclick="simulateWeek()">Haftayı Oyna</button>
+      <button id="reset-league-btn" class="btn-main" style="width:auto; padding:6px 12px; background: linear-gradient(45deg, #ffd700, #ffa500); color:#000; display:none;" onclick="resetSeason()">Yeni Sezona Başla 🏆</button>
     </div>
 
     <div id="last-match-result" style="background:#11141d; padding:8px; border-radius:8px; margin-bottom:10px; font-size:11px; color:#0099ff;">
@@ -187,7 +188,6 @@
     let myInventory = [];
     let currentWeek = 1;
 
-    // 20 Takımlı Lig
     let teams = [
       { name: "Samet FC", points: 0, played: 0, isUser: true },
       { name: "Galatasaray", points: 0, played: 0 }, { name: "Fenerbahçe", points: 0, played: 0 },
@@ -285,9 +285,9 @@
       alert(`${selectedPlayerForSlot.name} seçildi. Şimdi sahadaki bir boş yere tıklayarak yerleştir!`);
     }
 
-    function placePlayer(slot) {
+    function placePlayer(slotElement) {
       if (!selectedPlayerForSlot) return alert('Önce alttan bir oyuncu seçmelisin!');
-      event.currentTarget.innerHTML = `
+      slotElement.innerHTML = `
         <div class="ef-card" style="width:100%; height:100%;">
           <span class="rating">${selectedPlayerForSlot.rating}</span>
           <span class="pos">${selectedPlayerForSlot.pos}</span>
@@ -315,8 +315,8 @@
       });
     }
 
-    function simulateWeek() {
-      if (currentWeek > 38) return alert('Sezon Tamamlandı!');
+    async function simulateWeek() {
+      if (currentWeek > 38) return;
 
       const myScore = Math.floor(Math.random() * 4);
       const oppScore = Math.floor(Math.random() * 3);
@@ -339,12 +339,50 @@
         if (Math.random() > 0.5) t.points += 3;
       });
 
-      db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
+      await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
       document.getElementById('coin-count').innerText = currentUser.coins;
 
       currentWeek++;
-      document.getElementById('week-num').innerText = currentWeek;
+
+      if (currentWeek > 38) {
+        document.getElementById('week-num').innerText = "38 (SEZON BİTTİ)";
+        document.getElementById('play-week-btn').style.display = 'none';
+        document.getElementById('reset-league-btn').style.display = 'inline-block';
+        
+        teams.sort((a, b) => b.points - a.points);
+        const userRank = teams.findIndex(t => t.isUser) + 1;
+        
+        let reward = 0;
+        if(userRank === 1) reward = 2000;
+        else if(userRank <= 3) reward = 1000;
+        else reward = 300;
+
+        currentUser.coins += reward;
+        await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
+        document.getElementById('coin-count').innerText = currentUser.coins;
+
+        alert(`SEZON BİTTİ!\nLigi ${userRank}. sırada tamamladın.\nBonus Ödülün: +${reward} Coin!`);
+      } else {
+        document.getElementById('week-num').innerText = currentWeek;
+      }
+
       renderLeague();
+    }
+
+    function resetSeason() {
+      currentWeek = 1;
+      teams.forEach(t => {
+        t.points = 0;
+        t.played = 0;
+      });
+
+      document.getElementById('week-num').innerText = 1;
+      document.getElementById('play-week-btn').style.display = 'inline-block';
+      document.getElementById('reset-league-btn').style.display = 'none';
+      document.getElementById('last-match-result').innerText = "Yeni sezon başladı! Maç yapmak için butonuna bas.";
+
+      renderLeague();
+      alert("Yeni Sezon Başladı! Başarılar!");
     }
 
     async function giveCoins() {

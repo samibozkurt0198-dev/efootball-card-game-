@@ -88,22 +88,22 @@
     <div class="pitch">
       <div class="squad-grid">
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this, 'LW')">LW</div>
-          <div class="empty-slot" onclick="placePlayer(this, 'ST')">ST</div>
-          <div class="empty-slot" onclick="placePlayer(this, 'RW')">RW</div>
+          <div class="empty-slot" id="slot-LW" onclick="placePlayer('LW')">LW</div>
+          <div class="empty-slot" id="slot-ST" onclick="placePlayer('ST')">ST</div>
+          <div class="empty-slot" id="slot-RW" onclick="placePlayer('RW')">RW</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this, 'CM1')">CM</div>
-          <div class="empty-slot" onclick="placePlayer(this, 'CAM')">CAM</div>
-          <div class="empty-slot" onclick="placePlayer(this, 'CM2')">CM</div>
+          <div class="empty-slot" id="slot-CM1" onclick="placePlayer('CM1')">CM</div>
+          <div class="empty-slot" id="slot-CAM" onclick="placePlayer('CAM')">CAM</div>
+          <div class="empty-slot" id="slot-CM2" onclick="placePlayer('CM2')">CM</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this, 'LB')">LB</div>
-          <div class="empty-slot" onclick="placePlayer(this, 'CB1')">CB</div>
-          <div class="empty-slot" onclick="placePlayer(this, 'CB2')">CB</div>
+          <div class="empty-slot" id="slot-LB" onclick="placePlayer('LB')">LB</div>
+          <div class="empty-slot" id="slot-CB1" onclick="placePlayer('CB1')">CB</div>
+          <div class="empty-slot" id="slot-CB2" onclick="placePlayer('CB2')">CB</div>
         </div>
         <div class="squad-row">
-          <div class="empty-slot" onclick="placePlayer(this, 'GK')">GK</div>
+          <div class="empty-slot" id="slot-GK" onclick="placePlayer('GK')">GK</div>
         </div>
       </div>
     </div>
@@ -193,17 +193,6 @@
         </div>
       </div>
 
-      <div class="pack-card" style="border-color:#e65c00;">
-        <i class="fa-solid fa-star fa-2x" style="color:#e65c00;"></i>
-        <h5 style="margin:5px 0;">Süper Lig Paketi</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 2.000 Coin</p>
-        <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 2000, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 10000, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #e65c00, #F2994A);" onclick="openPack('superlig', 20000, 10)">10x Aç</button>
-        </div>
-      </div>
-
       <div class="pack-card" style="border-color:#ffd700;">
         <i class="fa-solid fa-gem fa-2x" style="color:#ffd700;"></i>
         <h5 style="margin:5px 0;">Altın Paket</h5>
@@ -212,83 +201,6 @@
           <button class="btn-main" onclick="openPack('altin', 3500, 1)">1x Aç</button>
           <button class="btn-main" onclick="openPack('altin', 17500, 5)">5x Aç</button>
           <button class="btn-main" onclick="openPack('altin', 35000, 10)">10x Aç</button>
-        </div>
-      </div>
-
-      <div class="pack-card" style="border-color:#9b59b6;">
-        <i class="fa-solid fa-wand-magic-sparkles fa-2x" style="color:#9b59b6;"></i>
-        <h5 style="margin:5px 0;">Yıldızlar Karma Paketi</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 4.500 Coin</p>
-        <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 4500, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 22500, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #8e44ad, #9b59b6);" onclick="openPack('stars', 45000, 10)">10x Aç</button>
-        </div>
-      </div>
-
-      <div class="pack-card" style="border-color:#00ffff;">
-        <i class="fa-solid fa-crown fa-2x" style="color:#00ffff;"></i>
-        <h5 style="margin:5px 0;">Elmas Paket</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 6.000 Coin (+88 Yıldızlar)</p>
-        <div class="pack-btns">
-          <button class="btn-main" onclick="openPack('elmas', 6000, 1)">1x Aç</button>
-          <button class="btn-main" onclick="openPack('elmas', 30000, 5)">5x Aç</button>
-          <button class="btn-main" onclick="openPack('elmas', 60000, 10)">10x Aç</button>
-        </div>
-      </div>
-
-      <div class="pack-card" style="border-color:#2ecc71;">
-        <i class="fa-solid fa-bolt fa-2x" style="color:#2ecc71;"></i>
-        <h5 style="margin:5px 0;">Geleceğin Yıldızları (Wonderkid)</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 8.000 Coin</p>
-        <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 8000, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 40000, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openPack('wonderkid', 80000, 10)">10x Aç</button>
-        </div>
-      </div>
-
-      <div class="pack-card" style="border-color:#11998e;">
-        <i class="fa-solid fa-trophy fa-2x" style="color:#11998e;"></i>
-        <h5 style="margin:5px 0;">UEFA Şampiyonlar Ligi</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 10.000 Coin (+91 Yıldızlar)</p>
-        <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 10000, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 50000, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #11998e, #38ef7d);" onclick="openPack('ucl', 100000, 10)">10x Aç</button>
-        </div>
-      </div>
-
-      <div class="pack-card" style="border-color:#e74c3c;">
-        <i class="fa-solid fa-earth-americas fa-2x" style="color:#e74c3c;"></i>
-        <h5 style="margin:5px 0;">Dünya Kupası Özel Paketi</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 14.000 Coin</p>
-        <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 14000, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 70000, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #c0392b, #e74c3c);" onclick="openPack('worldcup', 140000, 10)">10x Aç</button>
-        </div>
-      </div>
-
-      <div class="pack-card" style="border-color:#ff007f;">
-        <i class="fa-solid fa-dragon fa-2x" style="color:#ff007f;"></i>
-        <h5 style="margin:5px 0;">Efsanevi ICON Paketi</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 18.000 Coin (+93 Süper Efsane)</p>
-        <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 18000, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 90000, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #ff007f, #ffd700); color:#fff;" onclick="openPack('icon', 180000, 10)">10x Aç</button>
-        </div>
-      </div>
-
-      <div class="pack-card" style="border-color:#f1c40f;">
-        <i class="fa-solid fa-fire-flame-curved fa-2x" style="color:#f1c40f;"></i>
-        <h5 style="margin:5px 0;">Prime All-Stars Paketi</h5>
-        <p style="font-size:10px; color:#aaa;">Tekli: 25.000 Coin (+95 Ultra Süperstar)</p>
-        <div class="pack-btns">
-          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 25000, 1)">1x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 125000, 5)">5x Aç</button>
-          <button class="btn-main" style="background:linear-gradient(45deg, #f39c12, #f1c40f); color:#000;" onclick="openPack('prime', 250000, 10)">10x Aç</button>
         </div>
       </div>
 
@@ -333,17 +245,11 @@
     let userTeamPower = 0;
 
     let teams = [
-      { name: "Samet FC", points: 0, played: 0, isUser: true },
+      { name: "Takımım", points: 0, played: 0, isUser: true },
       { name: "Galatasaray", points: 0, played: 0 }, { name: "Fenerbahçe", points: 0, played: 0 },
       { name: "Beşiktaş", points: 0, played: 0 }, { name: "Trabzonspor", points: 0, played: 0 },
       { name: "Real Madrid", points: 0, played: 0 }, { name: "Barcelona", points: 0, played: 0 },
-      { name: "Man. City", points: 0, played: 0 }, { name: "Arsenal", points: 0, played: 0 },
-      { name: "Liverpool", points: 0, played: 0 }, { name: "Bayern München", points: 0, played: 0 },
-      { name: "PSG", points: 0, played: 0 }, { name: "Inter", points: 0, played: 0 },
-      { name: "AC Milan", points: 0, played: 0 }, { name: "Juventus", points: 0, played: 0 },
-      { name: "Atl. Madrid", points: 0, played: 0 }, { name: "Dortmund", points: 0, played: 0 },
-      { name: "Leverkusen", points: 0, played: 0 }, { name: "Napoli", points: 0, played: 0 },
-      { name: "Chelsea", points: 0, played: 0 }
+      { name: "Man. City", points: 0, played: 0 }, { name: "Arsenal", points: 0, played: 0 }
     ];
 
     const allPlayersDatabase = [
@@ -357,26 +263,58 @@
       { id:8, name: "T. Courtois", rating: 90, pos: "GK", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcC77" }
     ];
 
-    async function login() {
-      const username = document.getElementById('username').value.trim();
-      if (!username) return alert('Kullanıcı adı girin!');
+    // SAYFA YÜKLENDİĞİNDE OTOMATİK VERİ ÇEK
+    window.onload = function() {
+      const savedUser = localStorage.getItem('ef_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        loadUserData();
+      }
+    };
 
-      let { data: user } = await db.from('users').select('*').eq('username', username).maybeSingle();
+    function saveData() {
+      if (!currentUser) return;
+      localStorage.setItem('ef_user', JSON.stringify(currentUser));
+      localStorage.setItem(`ef_inventory_${currentUser.username}`, JSON.stringify(myInventory));
+      localStorage.setItem(`ef_field_${currentUser.username}`, JSON.stringify(fieldPlayers));
+    }
+
+    async function login() {
+      const usernameInput = document.getElementById('username').value.trim();
+      if (!usernameInput) return alert('Kullanıcı adı girin!');
+
+      let { data: user } = await db.from('users').select('*').eq('username', usernameInput).maybeSingle();
       if (!user) {
-        const { data: newUser } = await db.from('users').insert([{ username: username, coins: 1000, points: 0, power: 0 }]).select().single();
+        const { data: newUser } = await db.from('users').insert([{ username: usernameInput, coins: 1000, points: 0, power: 0 }]).select().single();
         user = newUser;
       }
 
       currentUser = user;
-      teams[0].name = user.username + " FC";
+      saveData();
+      loadUserData();
+    }
 
+    function loadUserData() {
+      teams[0].name = currentUser.username + " FC";
+
+      // Yerel verileri yükle
+      const savedInv = localStorage.getItem(`ef_inventory_${currentUser.username}`);
+      if (savedInv) myInventory = JSON.parse(savedInv);
+
+      const savedField = localStorage.getItem(`ef_field_${currentUser.username}`);
+      if (savedField) fieldPlayers = JSON.parse(savedField);
+
+      document.getElementById('view-login').classList.remove('active-view');
       document.getElementById('top-header').style.display = 'flex';
       document.getElementById('bottom-nav').style.display = 'flex';
-      document.getElementById('user-display').innerText = user.username;
-      document.getElementById('coin-count').innerText = user.coins;
+      document.getElementById('user-display').innerText = currentUser.username;
+      document.getElementById('coin-count').innerText = currentUser.coins;
 
-      if (user.is_admin) document.getElementById('admin-nav').style.display = 'flex';
+      if (currentUser.is_admin) document.getElementById('admin-nav').style.display = 'flex';
 
+      renderField();
+      renderInventory();
+      calculateTeamPower();
       renderLeague();
       loadOnlineLeague();
       switchTab('squad', document.querySelector('.nav-item'));
@@ -427,6 +365,7 @@
         `;
       }
 
+      saveData();
       renderInventory();
     }
 
@@ -457,7 +396,7 @@
       alert(`${player.name} seçildi. Şimdi sahadaki bir boş yere tıklayarak yerleştir!`);
     }
 
-    async function placePlayer(slotElement, slotId) {
+    async function placePlayer(slotId) {
       if (selectedPlayerIndex === null || selectedPlayerIndex === undefined) return alert('Önce alttan bir oyuncu seçmelisin!');
       
       const player = myInventory[selectedPlayerIndex];
@@ -470,20 +409,30 @@
       }
 
       fieldPlayers[slotId] = player;
-
-      slotElement.innerHTML = `
-        <div class="ef-card" style="width:100%; height:100%;">
-          <span class="rating">${player.rating}</span>
-          <span class="pos">${player.pos}</span>
-          <img src="${player.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=11141d&color=ffd700'">
-          <div class="name">${player.name}</div>
-        </div>
-      `;
-
       myInventory.splice(selectedPlayerIndex, 1);
       selectedPlayerIndex = null;
+
+      saveData();
+      renderField();
       renderInventory();
       calculateTeamPower();
+    }
+
+    function renderField() {
+      Object.keys(fieldPlayers).forEach(slotId => {
+        const player = fieldPlayers[slotId];
+        const slotElement = document.getElementById('slot-' + slotId);
+        if (slotElement && player) {
+          slotElement.innerHTML = `
+            <div class="ef-card" style="width:100%; height:100%;">
+              <span class="rating">${player.rating}</span>
+              <span class="pos">${player.pos}</span>
+              <img src="${player.img}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=11141d&color=ffd700'">
+              <div class="name">${player.name}</div>
+            </div>
+          `;
+        }
+      });
     }
 
     async function calculateTeamPower() {
@@ -564,6 +513,7 @@
 
       await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
       document.getElementById('coin-count').innerText = currentUser.coins;
+      saveData();
 
       currentWeek++;
 
@@ -579,6 +529,7 @@
         currentUser.coins += reward;
         await db.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
         document.getElementById('coin-count').innerText = currentUser.coins;
+        saveData();
 
         alert(`SEZON BİTTİ!\nLigi ${userRank}. sırada tamamladın.\nBonus Ödülün: +${reward} Coin!`);
       } else {
@@ -621,7 +572,7 @@
 
         await db.from('users').update({ points: (u.points || 0) + addedPoints }).eq('id', u.id);
       }
-      alert('Online Ligde yeni hafta simüle edildi ve puanlar güncellendi!');
+      alert('Online Ligde yeni hafta simüle edildi!');
       loadOnlineLeague();
     }
 

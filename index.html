@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eFootball Card Game</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #121212; color: #fff; text-align: center; margin: 0; padding: 20px; }
+    .card { background: #1e1e1e; border: 2px solid #ffd700; border-radius: 10px; padding: 15px; display: inline-block; width: 150px; margin: 10px; }
+    button { background: #e50914; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin: 5px; }
+    button:hover { background: #b80710; }
+    input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-right: 5px; }
+    #admin-panel { margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>eFootball Card Game</h1>
+  
+  <!-- Kullanıcı Giriş Alanı -->
+  <div id="auth-section">
+    <input type="text" id="username" placeholder="Kullanıcı Adınız">
+    <button onclick="login()">Oyuna Gir</button>
+  </div>
+
+  <!-- Oyun Alanı -->
+  <div id="game-section" style="display:none;">
+    <h2>Hoşgeldin, <span id="user-display"></span>!</h2>
+    <h3>Coins: <span id="coin-count">0</span> 🪙</h3>
+    
+    <button onclick="openPack()">🎁 Paket Aç (200 Coins)</button>
+    
+    <div id="pack-result"></div>
+
+    <!-- Admin Paneli -->
+    <div id="admin-panel">
+      <h2 style="color: #ffd700;">👑 Admin Kontrol Paneli</h2>
+      <input type="text" id="target-user" placeholder="Kullanıcı Adı">
+      <br><br>
+      <input type="number" id="coin-amount" placeholder="Eklenecek Coin">
+      <button onclick="giveCoins()">Coin Ver</button>
+      <br><br>
+      <button onclick="banUser()" style="background: darkred;">Kullanıcıyı Banla</button>
+    </div>
+  </div>
+
+  <script>
+    // Supabase Bağlantın
+    const SUPABASE_URL = "https://trrxypyrzxjlaafaknso.supabase.co"; 
+    const SUPABASE_KEY = "sb_publishable_YRQVdZwhPGX7lfpksyUwdg_32u19Lm0"; 
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+
+    async function login() {
+      const username = document.getElementById('username').value.trim();
+      if (!username) return alert('Lütfen bir kullanıcı adı girin.');
+
+      // Kullanıcı verisini çek veya yoksa oluştur
+      let { data: user, error } = await supabase.from('users').select('*').eq('username', username).single();
+
+      if (!user) {
+        const { data: newUser, error: createError } = await supabase.from('users').insert([{ username: username }]).select().single();
+        user = newUser;
+      }
+
+      if (user.is_banned) {
+        alert('Bu hesap banlanmıştır!');
+        return;
+      }
+
+      currentUser = user;
+      document.getElementById('auth-section').style.display = 'none';
+      document.getElementById('game-section').style.display = 'block';
+      document.getElementById('user-display').innerText = user.username;
+      document.getElementById('coin-count').innerText = user.coins;
+
+      if (user.is_admin) {
+        document.getElementById('admin-panel').style.display = 'block';
+      }
+    }
+
+    async function openPack() {
+      if (currentUser.coins < 200) return alert('Yeterli coin yok!');
+
+      // Coin düşür
+      currentUser.coins -= 200;
+      await supabase.from('users').update({ coins: currentUser.coins }).eq('id', currentUser.id);
+      document.getElementById('coin-count').innerText = currentUser.coins;
+
+      // Örnek kart düşme simülasyonu
+      const samplePlayers = [
+        { name: "Messi", rating: 95, pos: "RW" },
+        { name: "Ronaldo", rating: 94, pos: "ST" },
+        { name: "Mbappe", rating: 93, pos: "ST" },
+        { name: "Arda Güler", rating: 85, pos: "CAM" }
+      ];
+      const pulled = samplePlayers[Math.floor(Math.random() * samplePlayers.length)];
+
+      document.getElementById('pack-result').innerHTML = `
+        <div class="card">
+          <h3>${pulled.name}</h3>
+          <p>OVR: ${pulled.rating}</p>
+          <p>Mevki: ${pulled.pos}</p>
+        </div>
+      `;
+    }
+
+    // Admin Fonksiyonları
+    async function giveCoins() {
+      const target = document.getElementById('target-user').value;
+      const amount = parseInt(document.getElementById('coin-amount').value);
+      
+      const { data: user } = await supabase.from('users').select('*').eq('username', target).single();
+      if (user) {
+        await supabase.from('users').update({ coins: user.coins + amount }).eq('username', target);
+        alert(`${target} kullanıcısına ${amount} coin verildi!`);
+      } else {
+        alert('Kullanıcı bulunamadı.');
+      }
+    }
+
+    async function banUser() {
+      const target = document.getElementById('target-user').value;
+      await supabase.from('users').update({ is_banned: true }).eq('username', target);
+      alert(`${target} kullanıcısı banlandı!`);
+    }
+  </script>
+</body>
+</html>
+
